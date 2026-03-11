@@ -1,4 +1,4 @@
-# Macro Indicadores - Dashboard Grupo Musso
+﻿# Macro Indicadores - Dashboard Grupo Musso
 
 Estrutura inicial para evoluir o mock para produto real, mantendo o mesmo frontend e preparando integracao com Supabase + conectores de APIs externas.
 
@@ -20,6 +20,7 @@ Estrutura inicial para evoluir o mock para produto real, mantendo o mesmo fronte
 |   |   |   |-- data
 |   |   |   |-- jobs
 |   |   |   |-- lib
+|   |   |   |-- middleware
 |   |   |   |-- routes
 |   |   |   `-- services
 |   |   |-- Dockerfile
@@ -42,28 +43,39 @@ Estrutura inicial para evoluir o mock para produto real, mantendo o mesmo fronte
 ## O que ja esta pronto
 
 - Frontend com o mock portado para React/Vite em `apps/web/src/components/DashboardGrupoMusso.jsx`
+- Tela de login com mesma linguagem visual do dashboard
+- Aba de Configurações com gestão de usuários (somente admin), com fluxo CRUD via modal.
 - API com endpoints:
   - `GET /api/health`
+  - `POST /api/auth/login`
+  - `GET /api/auth/me`
   - `GET /api/dashboard/latest`
-  - `POST /api/dashboard/snapshot`
-  - `POST /api/sync` (placeholder para ingestao)
-- Servico de leitura/gravação de snapshots no Supabase
+  - `POST /api/dashboard/snapshot` (admin)
+  - `POST /api/sync` (admin)
+  - `GET /api/users` (admin)
+  - `POST /api/users` (admin)
+- Servico de leitura/gravacao de snapshots no Supabase
 - Estrutura de adapters para integrar fontes externas (`sourceAdapters`)
-- Migracao SQL e seed para tabela `dashboard_snapshots`
+- Migracoes SQL para snapshots e usuarios
+- Usuario inicial padrao: `admin` / `admin`
 
 ## Setup local (sem Docker)
 
 1. Copie `.env.example` para `.env` e preencha:
    - `SUPABASE_URL`
    - `SUPABASE_SERVICE_ROLE_KEY`
+   - `JWT_SECRET`
+
 2. Instale dependencias:
 
 ```bash
 npm install
 ```
 
-3. Rode migracao e seed no Supabase SQL Editor:
+3. Rode migracoes e seed no Supabase SQL Editor:
    - `supabase/migrations/20260311000100_init.sql`
+   - `supabase/migrations/20260311000200_users_auth.sql`
+   - `supabase/migrations/20260311000300_users_profile_fields.sql`
    - `supabase/seed.sql`
 
 4. Inicie frontend + api:
@@ -74,6 +86,7 @@ npm run dev
 
 - Web: `http://localhost:5173`
 - API: `http://localhost:4000`
+- Login inicial: `admin` / `admin`
 
 ## Setup com Docker
 
@@ -106,5 +119,6 @@ npm run docker:down
 
 ## Observacoes
 
-- O frontend ja esta preparado para buscar dados em `/api/dashboard/latest`.
-- Se a API ou Supabase falhar, o componente usa fallback do mock para manter o dashboard de pe.
+- O frontend busca dados em `/api/dashboard/latest` apos login.
+- Se a API/Supabase falhar no dashboard, o componente usa fallback local do mock para manter a tela funcionando.
+- O endpoint de usuarios fica oculto para perfil `user`.

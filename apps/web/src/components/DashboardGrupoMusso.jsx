@@ -314,7 +314,7 @@ function SectionHeader({ color, label, icon }) {
 // ============================================================
 // MAIN DASHBOARD
 // ============================================================
-export default function DashboardGrupoMusso({ data }) {
+export default function DashboardGrupoMusso({ data, showHeader = true }) {
   const [activeTab, setActiveTab] = useState("geral");
   const d = data || SAMPLE_DATA;
 
@@ -366,6 +366,7 @@ export default function DashboardGrupoMusso({ data }) {
       <div style={{
         background: `linear-gradient(135deg, ${COLORS.card} 0%, #0F172A 100%)`,
         borderBottom: `1px solid ${COLORS.border}`, padding: "16px 24px",
+        display: showHeader ? "block" : "none",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <div>

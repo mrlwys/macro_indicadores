@@ -4,9 +4,11 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { ZodError } from "zod";
 import { env } from "./config/env.js";
+import { authRouter } from "./routes/auth.js";
 import { dashboardRouter } from "./routes/dashboard.js";
 import { healthRouter } from "./routes/health.js";
 import { syncRouter } from "./routes/sync.js";
+import { usersRouter } from "./routes/users.js";
 
 export function createApp() {
   const app = express();
@@ -24,20 +26,27 @@ export function createApp() {
   });
 
   app.use("/api/health", healthRouter);
+  app.use("/api/auth", authRouter);
+  app.use("/api/users", usersRouter);
   app.use("/api/dashboard", dashboardRouter);
   app.use("/api/sync", syncRouter);
 
   app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     if (err instanceof ZodError) {
       return res.status(400).json({
-        message: "Invalid request payload",
+        message: "Payload da requisição inválido.",
         details: err.issues,
       });
     }
 
     return res.status(500).json({
-      message: "Internal server error",
-      detail: err instanceof Error ? err.message : "Unknown error",
+      message: "Erro interno do servidor.",
+      detail:
+        err instanceof Error
+          ? err.message
+          : typeof err === "object" && err && "message" in err
+            ? String((err as { message: unknown }).message)
+            : "Erro desconhecido",
     });
   });
 

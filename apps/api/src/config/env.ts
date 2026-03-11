@@ -23,6 +23,8 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_SCHEMA: z.string().default("public"),
   SYNC_SECRET: z.string().optional(),
+  JWT_SECRET: z.string().default("change-me-in-production"),
+  JWT_EXPIRES_IN: z.string().default("12h"),
 });
 
 export const env = envSchema.parse(process.env);
