@@ -1,0 +1,23 @@
+{
+  "name": "macro_indicadores",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,api -c cyan,green \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "npm run dev -w @macro/web",
+    "dev:api": "npm run dev -w @macro/api",
+    "build": "npm run build -ws",
+    "lint": "npm run lint -ws",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2"
+  }
+}

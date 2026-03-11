@@ -1,0 +1,141 @@
+insert into public.dashboard_snapshots (source, reference_date, payload)
+values (
+  'seed',
+  '2026-02-28',
+  '{
+    "periodo": "Fevereiro 2026",
+    "financeiro": {
+      "faturamento_mensal": [
+        { "mes": "Jan", "realizado": 334852, "meta": 650000 },
+        { "mes": "Fev", "realizado": 527453, "meta": 700000 },
+        { "mes": "Mar", "realizado": 580000, "meta": 750000 },
+        { "mes": "Abr", "realizado": 620000, "meta": 780000 },
+        { "mes": "Mai", "realizado": 710000, "meta": 800000 },
+        { "mes": "Jun", "realizado": 890000, "meta": 833000 },
+        { "mes": "Jul", "realizado": 780000, "meta": 833000 },
+        { "mes": "Ago", "realizado": 920000, "meta": 833000 },
+        { "mes": "Set", "realizado": null, "meta": 833000 },
+        { "mes": "Out", "realizado": null, "meta": 833000 },
+        { "mes": "Nov", "realizado": null, "meta": 833000 },
+        { "mes": "Dez", "realizado": null, "meta": 833000 }
+      ],
+      "faturamento_ytd": 5362305,
+      "meta_anual": 10000000,
+      "margem_bruta": 27.3,
+      "margem_liquida": 13.1,
+      "margem_meta": 12,
+      "custo_fixo_mensal": 285000,
+      "reserva_caixa": 198000,
+      "reserva_meta_meses": 2,
+      "prazo_medio_recebimento": 92,
+      "prazo_meta": 75,
+      "custo_antecipacao_mensal": 18500,
+      "dre_fechado_dia10": true,
+      "fluxo_caixa_projetado": true,
+      "pct_faturamento_reserva": 3.2
+    },
+    "comercial": {
+      "oportunidades_mes": 68,
+      "oportunidades_meta": 70,
+      "orcamentos_emitidos": 61,
+      "orcamentos_meta": 70,
+      "tempo_resposta_hrs": 58,
+      "tempo_meta_hrs": 72,
+      "taxa_conversao": 31.2,
+      "conversao_meta": 35,
+      "ticket_medio": 46200,
+      "ticket_meta": 50000,
+      "pipeline_ativo": 2850000,
+      "pipeline_meta": 2499000,
+      "followup_pct": 87,
+      "followup_meta": 100,
+      "perdas_demora_mes": 8,
+      "perdas_demora_meta": 4,
+      "clientes_recorrencia": 6,
+      "recorrencia_meta": 10,
+      "receita_prospeccao_pct": 28,
+      "prospeccao_meta": 40,
+      "funil": {
+        "oportunidades": 68,
+        "qualificados": 52,
+        "orcados": 61,
+        "negociacao": 24,
+        "fechados": 18
+      }
+    },
+    "orcamentacao": {
+      "emitidos_mes": 61,
+      "meta_emitidos": 70,
+      "tempo_medio_resposta_hrs": 58,
+      "meta_tempo": 72,
+      "backlog": 7,
+      "meta_backlog": 10,
+      "pct_72h": 82,
+      "meta_72h": 90,
+      "templates_criados": 6,
+      "meta_templates": 10,
+      "desvio_template_pct": 6.2,
+      "meta_desvio": 8,
+      "perdas_demora": 8,
+      "meta_perdas": 4
+    },
+    "engenharia": {
+      "checklist_compliance": 78,
+      "meta_checklist": 100,
+      "tempo_medio_projeto_dias": 12,
+      "projetos_devolvidos_pct": 8,
+      "meta_devolvidos": 5,
+      "pops_documentados": 3,
+      "meta_pops_jun": 5,
+      "meta_pops_out": 10,
+      "bom_antecedencia_dias": 3.5,
+      "meta_bom_dias": 5,
+      "horas_retrabalho": 32
+    },
+    "producao": {
+      "entregas_no_prazo_pct": 68,
+      "meta_entregas": 80,
+      "projetos_simultaneos": 8,
+      "horas_retrabalho_pct": 4.2,
+      "meta_retrabalho": 3,
+      "tempo_medio_fab_dias": 58,
+      "meta_fab_dias": 55,
+      "travados_material": 3,
+      "meta_travados": 2,
+      "tempo_ceo_fabrica_pct": 45,
+      "meta_ceo_fabrica": 30,
+      "standups_realizados_pct": 85,
+      "meta_standups": 100
+    },
+    "diretoria": {
+      "tempo_ceo_estrategico_pct": 38,
+      "meta_estrategico": 50,
+      "rituais_realizados": {
+        "standup_prod": 85,
+        "pipeline_semanal": 100,
+        "eng_compras": 75,
+        "indicadores_mensal": 100,
+        "revisao_trimestral": null
+      },
+      "roadmap_progresso_pct": 52,
+      "papeis_definidos": true,
+      "agenda_ceo_blindada": true
+    },
+    "alertas": [
+      { "tipo": "danger", "setor": "Engenharia", "msg": "Checklist compliance em 78%" },
+      { "tipo": "warning", "setor": "Orcamentacao", "msg": "Perdas por demora acima da meta" },
+      { "tipo": "warning", "setor": "Producao", "msg": "Projetos travados por falta de material" },
+      { "tipo": "success", "setor": "Financeiro", "msg": "Margem liquida acima da meta" },
+      { "tipo": "success", "setor": "Comercial", "msg": "SLA de resposta dentro da meta" }
+    ],
+    "acoes_pendentes": [
+      { "acao": "Contratar 2o orcamentista", "resp": "Jorge", "prazo": "15/Mar", "status": "em_andamento" },
+      { "acao": "Completar 5 POPs de engenharia", "resp": "Paulo", "prazo": "30/Jun", "status": "em_andamento" },
+      { "acao": "Reserva de caixa = 1 mes custo fixo", "resp": "Amanda", "prazo": "31/Ago", "status": "em_andamento" },
+      { "acao": "Mapeamento de concorrencia", "resp": "Dir. Comercial", "prazo": "31/Ago", "status": "pendente" },
+      { "acao": "1a proposta com automacao integrada", "resp": "Engenharia", "prazo": "31/Jul", "status": "pendente" },
+      { "acao": "Padronizar 3 linhas de equipamento", "resp": "Engenharia + Comercial", "prazo": "31/Out", "status": "pendente" }
+    ]
+  }'::jsonb
+)
+on conflict do nothing;
