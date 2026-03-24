@@ -1,7 +1,7 @@
-﻿import { Router } from "express";
+import { Router } from "express";
 import { z } from "zod";
 import { requireAdmin, requireAuth, type AuthenticatedRequest } from "../middleware/auth.js";
-import { hashPassword } from "../services/authService.js";
+import { generateTemporaryPassword, hashPassword } from "../services/authService.js";
 import { createUser, deleteUser, listUsers, updateUser } from "../services/usersService.js";
 
 export const usersRouter = Router();
@@ -33,9 +33,8 @@ usersRouter.post("/", requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const parsed = createUserSchema.parse(req.body);
     const normalizedUsername = parsed.username.trim().toLowerCase();
-
-    // Senha inicial simplificada para manter o fluxo apenas com os campos solicitados.
-    const passwordHash = await hashPassword(normalizedUsername);
+    const temporaryPassword = generateTemporaryPassword();
+    const passwordHash = await hashPassword(temporaryPassword);
 
     const user = await createUser({
       fullName: parsed.fullName.trim(),
@@ -47,7 +46,8 @@ usersRouter.post("/", requireAuth, requireAdmin, async (req, res, next) => {
 
     return res.status(201).json({
       user,
-      message: "Usuário criado com sucesso. A senha inicial é igual ao nome de usuário.",
+      temporaryPassword,
+      message: "Usuário criado com sucesso. Guarde a senha temporária exibida nesta confirmação.",
     });
   } catch (error) {
     if (typeof error === "object" && error && "code" in error) {

@@ -31,7 +31,13 @@ async function apiRequest(path, options = {}) {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(text || `Request failed (${response.status})`);
+
+    try {
+      const parsed = JSON.parse(text);
+      throw new Error(parsed?.message || text || `Request failed (${response.status})`);
+    } catch {
+      throw new Error(text || `Request failed (${response.status})`);
+    }
   }
 
   return response.json();
@@ -60,8 +66,21 @@ export function fetchUsers() {
   });
 }
 
+export function fetchConfigEntries() {
+  return apiRequest("/config/entries", {
+    method: "GET",
+  });
+}
+
 export function createUser(input) {
   return apiRequest("/users", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export function createConfigEntry(input) {
+  return apiRequest("/config/entries", {
     method: "POST",
     body: JSON.stringify(input),
   });
@@ -74,8 +93,21 @@ export function updateUser(userId, input) {
   });
 }
 
+export function updateConfigEntry(entryId, input) {
+  return apiRequest(`/config/entries/${entryId}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
 export function deleteUser(userId) {
   return apiRequest(`/users/${userId}`, {
+    method: "DELETE",
+  });
+}
+
+export function deleteConfigEntry(entryId) {
+  return apiRequest(`/config/entries/${entryId}`, {
     method: "DELETE",
   });
 }

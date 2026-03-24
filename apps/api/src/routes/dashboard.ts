@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { dashboardDataSchema } from "../lib/dashboardSchema.js";
 import { requireAdmin, requireAuth } from "../middleware/auth.js";
 import { createDashboardSnapshot, getLatestDashboard } from "../services/dashboardService.js";
 
@@ -8,7 +9,7 @@ export const dashboardRouter = Router();
 const createSnapshotSchema = z.object({
   source: z.string().default("manual"),
   referenceDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  payload: z.record(z.string(), z.unknown()),
+  payload: dashboardDataSchema,
 });
 
 dashboardRouter.get("/latest", requireAuth, async (_req, res, next) => {
@@ -26,7 +27,7 @@ dashboardRouter.post("/snapshot", requireAuth, requireAdmin, async (req, res, ne
     const created = await createDashboardSnapshot({
       source: parsed.source,
       referenceDate: parsed.referenceDate,
-      payload: parsed.payload as never,
+      payload: parsed.payload,
     });
 
     if (!created) {

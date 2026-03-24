@@ -1,5 +1,5 @@
-﻿import { useEffect, useMemo, useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
+import SettingsConfigPanel from "./SettingsConfigPanel.jsx";
 const COLORS = {
   bg: "#0B1120",
   card: "#111827",
@@ -38,7 +38,18 @@ function parseErrorMessage(error, fallback) {
   return error.message || fallback;
 }
 
-export default function SettingsUsersPanel({ currentUser, onFetchUsers, onCreateUser, onUpdateUser, onDeleteUser }) {
+export default function SettingsUsersPanel({
+  currentUser,
+  onFetchUsers,
+  onCreateUser,
+  onUpdateUser,
+  onDeleteUser,
+  onFetchConfigEntries,
+  onCreateConfigEntry,
+  onUpdateConfigEntry,
+  onDeleteConfigEntry,
+  onConfigChanged,
+}) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -262,6 +273,15 @@ export default function SettingsUsersPanel({ currentUser, onFetchUsers, onCreate
             </table>
           </div>
         )}
+      </div>
+      <div style={{ marginTop: 18 }}>
+        <SettingsConfigPanel
+          onFetchConfigEntries={onFetchConfigEntries}
+          onCreateConfigEntry={onCreateConfigEntry}
+          onUpdateConfigEntry={onUpdateConfigEntry}
+          onDeleteConfigEntry={onDeleteConfigEntry}
+          onConfigChanged={onConfigChanged}
+        />
       </div>
 
       {isModalOpen ? (
@@ -513,3 +533,6 @@ export default function SettingsUsersPanel({ currentUser, onFetchUsers, onCreate
     </div>
   );
 }
+
+
+

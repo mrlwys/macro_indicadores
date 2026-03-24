@@ -1,0 +1,1914 @@
+https://empresa.nomus.com.br/empresa/rest/{endpoint}
+Nomus ERP
+API do Nomus ERP
+Nossas APIs necessitam da chave-integração-rest que pode ser obtida através da tela de configuração geral do seu
+sistema.
+Todos os endpoints de listagem podem ser paginados através do parâmetro "pagina" que tem como padrão o valor 1.
+Além disso, todos os endpoints de listagem podem ser filtrados através do parâmetro "query" seguindo o padrão:
+?query=nomeCampo=valorCampo;nomeCampo2=valorCampo2
+Os campos disponíveis para filtragem de um endpoint dependem dos campos que são retornados em uma requisição
+àquele endpoint.
+Para filtragem em campos data: ?query=campoData>yyyy-mm-ddTHH:mm:ss
+Contact Support:
+Email: suporte@nomus.com.br
+Throttling
+Com o objetivo de evitar o uso excessivo da API temos um mecanismo de throttling que bloqueia qualquer requisição
+após uma certa quantidade total de requisições seja ultrapassada. Quando isso acontecer em vez do retorno
+esperado da API será retornado uma respostas que indica o bloqueio e possui statuscode 429 �TOO MANY
+REQUESTS�.
+Requisições a nossa API sempre deve tratar esse possível retorno através do statuscode. Além disso, o integrador
+deve implementar esse tratamento levando em consideração o campo tempoAteLiberar, que em segundos, vai indicar
+quanto tempo deve ser aguardado até uma próxima requisição.
+Como preparar meu sistema para o throttling?
+Existem diversas formas de implementar no seu sistema a capacidade de aguardar o nosso throttling. O modo mais
+usual e simples é verificar se o código da resposta HTTP foi o 429, e se for verdadeiro, implementar a capacidade de
+aguardar pelo tempo que enviamos no campo "tempoAteLiberar" da resposta e refazer a sua requisição novamente
+em seguida.
+GETThrottling
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+https://empresa.nomus.com.br/empresa/rest/atributosProduto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+Exemplo de requisição que retorne a resposta do throttling
+Atributos de produto
+API de Atributos de produto do Nomus.
+GETListar atributos de produto
+Obtém a lista dos atributos de produto cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar atributo de produto
+https://empresa.nomus.com.br/empresa/rest/atributosProduto/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/apontamentos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+GETDetalhar atributo de produto
+Obtém o atributo de produto referente ao id informado.
+�Required)
+Apontamentos
+API de Apontamentos do Nomus.
+GETListar apontamentos
+Obtém a lista de apontamentos cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+https://empresa.nomus.com.br/empresa/rest/apontamentos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/apontamentos
+HEADERS
+Content-Type application/json
+Accept application/json
+Bodyraw (json)
+GETDetalhar apontamento
+Obtém o apontamento referente ao id informado.
+�Required)
+POSTInserir apontamento
+Insere um novo apontamento através dos campos informados no corpo da requisição.
+json
+{
+"dataHoraFinal": "15/01/2025 15:00:00",
+"dataHoraInicial": "15/01/2025 08:00:00",
+"idAtividade": 32,
+"idFuncionario": 15,
+"idOperacaoOrdem":13125,
+https://empresa.nomus.com.br/empresa/rest/apontamentos/moverParaLixeira/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/atividades
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+"idOperacaoOrdem":13125,
+"idRecurso": 5,
+"percentualProdutoAndamento": "0",
+"quantidade": "10.000000",
+"unidadeMedida": "UNIDADES",
+"unidadesMedidaSecundarias":[
+PUTMover para lixeira
+Move o apontamento referente ao id informado para a lixeira, de modo a desativar o mesmo.
+�Required)
+Atividades
+API de Atividades do Nomus.
+GETListar atividades
+Obtém a lista de atividades cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+PARAMS
+pagina
+query
+https://empresa.nomus.com.br/empresa/rest/boletos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+Boletos Bancários
+API de boletos bancários do Nomus.
+Campo status:
+1� Aguardando remessa
+2� Aguardando registro
+3� Registrado
+4� Pago
+5� Rejeitado
+GETListar boletos bancários
+Obtém a lista dos boletos bancários cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar boleto bancário
+https://empresa.nomus.com.br/empresa/rest/boletos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/causasProblemas
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Obtém o boleto bancário referente ao id informado.
+�Required)
+Causas de Problemas
+API de causas de problemas do Nomus.
+GETListar causas de problemas
+Após uma solicitação bem-sucedida, a response retornará uma lista de objetos de causas de problemas.
+Centros de custo
+API de centros de custo do Nomus.
+GETListar centros de custo
+https://empresa.nomus.com.br/empresa/rest/centrosCusto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/centrosTrabalho
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+Obtém a lista dos centros de custo cadastrados.
+Centros de trabalho
+API de centros de trabalho do Nomus.
+GETListar centros de trabalho
+Obtém a lista dos centros de trabalho de produto cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+https://empresa.nomus.com.br/empresa/rest/centrosTrabalho/:id
+HEADERS
+Accept application/json
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/clientes
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+GETDetalhar centro de trabalho
+Obtém o centro de trabalho referente ao id informado.
+�Required)
+Clientes
+API de clientes do Nomus.
+GETListar clientes
+Obtém a lista dos clientes cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+pagina
+https://empresa.nomus.com.br/empresa/rest/clientes/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/clientes/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id 45648936
+GETDetalhar cliente
+Obtém o cliente referente ao id informado.
+�Required)
+PUTEditar cliente
+Edita o cliente referente ao id informado, através dos campos enviados no corpo da requisição.
+�Required)
+POSTInserir cliente
+https://empresa.nomus.com.br/empresa/rest/clientes/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/componentesListaMateriais
+Insere um novo cliente através dos campos informados no corpo da requisição.
+json
+{
+"nome": "Novo Cliente",
+"bairro": "Campo Belo",
+"cep": "04618-003",
+"codigoIBGEMunicipio": "3550308",
+"endereco": "Rua João de Sousa Dias",
+"municipio": "São Paulo",
+"numero": "760",
+"pais": "BRASIL",
+"telefone": "+55 21 99999-9999",
+"tipoLogradouro":"RUA",
+Componentes da lista de materiais
+API de componentes da lista de materiais do Nomus.
+GETListar componentes da lista de materiais
+Obtém a lista dos componentes de lista de materiais cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/componentesListaMateriais/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/condicoesPagamentos
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar componente da lista de materiais
+Obtém o componente referente ao id informado
+�Required)
+Condições de pagamento
+API de condições de pagamentos do Nomus.
+GETListar condições de pagamento
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/condicoesPagamentos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Obtém a lista das condições de pagamento cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar condição de pagamento
+Obtém a condição de pagamento referente ao id informado.
+�Required)
+Contas a receber
+API de contas a receber do Nomus.
+GETListar contas a receber
+https://empresa.nomus.com.br/empresa/rest/contasReceber
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/contasReceber/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/contasReceber/:id
+Obtém a lista das contas a receber cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar conta a receber
+Obtém a conta a receber referente ao id informado.
+�Required)
+PUTEditar conta a receber
+Edita uma conta a receber.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/contasPagar
+HEADERS
+Content-Type application/json
+Edita uma conta a receber.
+Apenas os campos "statusProtestoCartorio" e "statusNegativacao" estão disponíveis nesse serviço.
+StatusProtestoCartorio:
+1 � Protesto pendente de aprovação
+2 � Enviado para protesto
+3 � Protestado
+4 � Pago após protesto
+StatusNegativacao:
+1 � Negativação pendente de aprovação;
+2 � Enviado para negativação
+3 � Negativado
+4 � Pago após negativação
+Contas a pagar
+API de contas a pagar do Nomus.
+GETListar contas a pagar
+Obtém a lista das contas a pagar cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/contasPagar/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+GETDetalhar conta a pagar
+Obtém a conta a pagar referente ao id informado.
+�Required)
+Contas Bancárias
+API de contas bancárias do Nomus.
+Campo "tipo" das contas bancárias:
+1� Conta corrente
+2� Caixa pequeno
+3� Cartão de crédito
+4� Investimento
+5� Meio de recebimento
+6� Controle de reembolso
+8� Desconto de duplicata
+https://empresa.nomus.com.br/empresa/rest/contasBancarias
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/contasBancarias/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+8� Desconto de duplicata
+7� Outros
+GETListar contas bancárias
+Obtém a lista das contas bancárias cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar conta bancária
+Obtém a conta bancária referente ao id informado.
+�Required)
+https://empresa.nomus.com.br/empresa/rest/contasBancarias
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/contasBancarias/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+POSTInserir conta bancária
+Cadastra uma nova conta bancária.
+json
+{
+"ativo": true,
+"contaBancaria": "conta teste",
+"idBanco": 10,
+"idEmpresa": 80,
+"nomeEmpresa": "Empresa teste 161925",
+"tipo": 1,
+"nomeMoeda": "Real"
+}
+PUTEditar conta bancária
+Edita a conta bancária referente ao id informado.
+id
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/contatos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/contatos/telefones/:telefone
+�Required)
+json
+{
+"agencia": "0002",
+"idEmpresa": 52
+}
+Contatos
+API de contatos do Nomus.
+GETListar contatos
+Obtém a lista dos contatos cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETListar contatos de telefone
+https://empresa.nomus.com.br/empresa/rest/contatos/telefones/:telefone
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+telefone
+https://empresa.nomus.com.br/empresa/rest/contatos/pessoa/:idPessoa
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+idPessoa
+https://empresa.nomus.com.br/empresa/rest/contatos/:id
+HEADERS
+Obtém a lista dos contatos cadastrados que possuem o telefone informado.
+�Required)
+GETListar contatos de uma pessoa
+Obtém a lista dos contatos de uma pessoa específica.
+GETDetalhar contato
+Obtém o contato referente ao id informado.
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/contratosServico
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/contratosServico/:id
+�Required)
+Contratos de Serviço
+API de contratos de serviço do Nomus.
+GETListar contratos de serviço
+Obtém a lista dos contratos de serviço cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar contrato de serviço
+Obtém o contrato de serviço referente ao id informado.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/contratosServico
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+�Required)
+POSTInserir contrato de serviço
+Cadastra um novo contrato de serviço.
+json
+{
+"idEmpresa" : 80,
+"natureza" : "Venda",
+"idPessoa" : 1002419,
+"dataEmissao" : "05/02/25",
+"status" : 1,
+"observacoes": "Contrato de serviço com a prefeitura",
+"itensContratoServico" : [
+{
+"idProduto" : 3796,
+"quantidade":1.1
+PUTEditar contrato de serviço
+https://empresa.nomus.com.br/empresa/rest/contratosServico/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/documentosEntrada
+Edita o contrato de serviço referente ao id informado.
+�Required)
+json
+{
+"idEmpresa" : 59,
+"idPessoa" : 1002417,
+"dataEmissao" : "28/02/25",
+"status" : 2,
+"observacoes": "Contrato de serviço com o shopping"
+}
+Documentos de entrada
+API de documentos de entrada do Nomus.
+POSTInserir documento de entrada
+Insere um novo documento de entrada através dos campos informados no corpo da requisição.
+É possível inserir um documento de devolução, para isso deve-se adicionar ao corpo da requisição o id do documento
+devolvido, ou o id do pedido de venda devolvido.
+Se o pedido de venda devolvido possuir mais de um documento de saída vinculado, será necessário passar o id do
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw
+https://empresa.nomus.com.br/empresa/rest/documentosEstoque
+documento que deseja-se devolver. Para consultar o id desses documentos, pode-se utilizar o endpoint
+'documentosEstoque/pedido'.
+Também é necessário informar o tipo de devolução, sendo 0 � "Total" e 1 � "Parcial".
+No caso de devoluções, não é necessário o envio dos campos 'idPessoa', 'idEmpresa' e 'idTipoMovimentacao' do
+documento, e nem dos campos 'idUnidadeMedida', 'idSetorEntrada', 'infAdProd', 'valorUnitario' e 'percentualDesconto'
+dos itens, pois serão obtidos a partir do documento devolvido.
+No caso de devoluções totais, não é necessário o envio do campo de itens.
+{
+"idEmpresa": 1,
+"idPedidoVendaDevolvido": 1484,
+"idTipoMovimentacao": 3,
+"idPessoa": 1, 
+"idSetorEntrada": 1,
+"idSetorSaida": 1,
+"dataEntrada": "26/09/2023",
+"observacoes": "TESTE",
+"tipoDevolucao": 0,
+"itens":[
+{
+"idProduto":1
+Documentos de estoque
+API de documentos de estoque do Nomus.
+GETListar documentos de estoque
+Obtém a lista documentos de estoque cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/documentosEstoque/pedido/:idPedidoVenda
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+idPedidoVenda
+https://empresa.nomus.com.br/empresa/rest/documentosEstoque/:id
+HEADERS
+Content-Type application/json
+GETListar documentos de saída por pedido de venda
+Obtém a lista documentos de saída cadastrados relacionados ao pedido de venda informado.
+GETDetalhar documento de estoque
+Obtém o documento de estoque referente ao id informado.
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/documentoMovimentacaoLivre
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+�Required)
+Documentos de Movimentação Livre
+API de documentos de movimentação livre do Nomus.
+POSTInserir documento de movimentação livre
+Insere uma nova empresa através dos campos informados no corpo da requisição.
+json
+{
+"numeroInterno": "TRF-2024-001",
+"idEmpresa": 1,
+"idTipoMovimentacao": 75,
+"idPessoa": 123,
+"dataHora": "15/11/2024 12:00",
+"observacoes": "Transferência entre almoxarifados",
+"itens": [
+{
+"idProduto": 2014,
+"idUnidadeMedida":4
+Empenhos
+https://empresa.nomus.com.br/empresa/rest/empenhos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+https://empresa.nomus.com.br/empresa/rest/empenhos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+PATH VARIABLES
+id
+Empenhos
+API de Empenhos do Nomus.
+GETListar empenhos
+Obtém a lista dos empenhos.
+GETListar empenhos por ordem
+Obtém os empenhos referente ao id da ordem informado.
+GETDetalhar empenho
+https://empresa.nomus.com.br/empresa/rest/empenhos/detalharEmpenho/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/empresas
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Detalhar empenho
+Obtém o empenho referente ao id informado.
+Empresas
+API de empresas do Nomus.
+tipoEmpresa � 1 � Pessoa Jurídica
+tipoEmpresa � 2 � Pessoa Fisica
+GETListar empresas
+Obtém a lista das empresas cadastradas.
+https://empresa.nomus.com.br/empresa/rest/empresas/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/empresas
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+GETDetalhar empresa
+Obtém a empresa referente ao id informado.
+POSTInserir empresa
+Insere uma nova empresa através dos campos informados no corpo da requisição.
+json
+https://empresa.nomus.com.br/empresa/rest/empresas/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Bodyraw (json)
+{
+"ativo": true,
+"bairro": "LOTEAMENTO INDUSTRIAL EXEMPLO 2",
+"cep": "09372-000",
+"cnaePrincipal": "Fabricação de produtos de trefilados de metal padronizados",
+"codigo": "2576",
+"complemento": "LETRA E;SETOR 2",
+"crt": "1 - Simples Nacional",
+"endereco": "RUA DOUTOR JALLES MARTINS SALGUEIRO",
+"ignorarEmpresa": false,
+"inscricaoEstadual":"442537549117"
+PUTEditar empresa
+Edita o usuário referente ao id informado.
+json
+{
+"bairro": "Bairro Editado",
+"endereco": "ENDERECO EDITADO"
+}
+Etiquetas
+API de etiquetas do Nomus.
+https://empresa.nomus.com.br/empresa/rest/etiquetas/identOrdem
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/etiquetas/:id
+HEADERS
+Accept application/json
+PATH VARIABLES
+id 45648936
+GETListar etiquetas
+Obtém a lista das etiquetas cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar etiqueta
+Obtém a etiqueta referente ao id informado.
+�Required)
+GETObter Etiqueta
+https://empresa.nomus.com.br/empresa/rest/etiquetas/:id/arquivo
+HEADERS
+Accept application/json
+PATH VARIABLES
+id 45648936
+https://empresa.nomus.com.br/empresa/rest/etiquetas/identOrdem
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw
+Obtém o arquivo em base64 referente a etiqueta de id informado.
+�Required)
+POSTInserir uma etiqueta de identificação de ordem
+Insere uma nova etiqueta de identificação de ordem através dos campos informados no corpo da requisição.
+{
+"codigo": "1000",
+"dataHoraCriacao": "06/10/2023",
+"idEntidadeOrigem": 5689,
+"idTipoEtiqueta": 1,
+"idUsuario": 70
+        
+}
+Famílias de produto
+https://empresa.nomus.com.br/empresa/rest/familiasProduto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/familiasProduto/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id 45648936
+API de famílias de produto do Nomus.
+GETListar famílias de produto
+Obtém as famílias de produto cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar família de produto
+Obtém a família de produto referente ao id informado.
+�Required)
+https://empresa.nomus.com.br/empresa/rest/formasPagamento
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/formasPagamento/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+Formas de pagamento
+API de formas de pagamento do Nomus.
+GETListar formas de pagamento
+Obtém a lista das formas de pagamento cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar forma de pagamento
+Obtém a forma de pagamento referente ao id informado.
+id
+https://empresa.nomus.com.br/empresa/rest/funcionarios
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+https://empresa.nomus.com.br/empresa/rest/fornecedoresProduto/:id
+HEADERS
+�Required)
+Funcionários
+API de Funcionários do Nomus.
+GETListar funcionários
+Obtém a lista de funcionários cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Fornecedores
+API de Fornecedores do Nomus.
+GETListar fornecedores de produto
+Obtém a lista de fornecedores de um produto referente ao id informado.
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/produtosFornecedor/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+PATH VARIABLES
+id
+GETListar produtos de fornecedor
+Obtém a lista de produtos de um fornecedor referente ao id informado.
+Grupos de produto
+https://empresa.nomus.com.br/empresa/rest/gruposProduto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/gruposProduto/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Grupos de produto
+API de grupos de produto do Nomus.
+GETListar grupos de produto
+Obtém a lista dos grupos de produto cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar grupo de produto
+Obtém o o grupo de produto referente ao id informado.
+�Required)
+https://empresa.nomus.com.br/empresa/rest/grupoUsuarios
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+https://empresa.nomus.com.br/empresa/rest/grupoUsuarios/:id/permissoesApp
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Grupos de usuários
+API de grupos de usuários do Nomus.
+GETListar grupos de usuários
+Obtém a lista das ordens cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETConsultar permissões dos aplicativos
+Obtém a lista das permissões dos aplicativos.
+Só aceita id inteiro.
+�Required) id do grupo de usuários
+Inventário
+https://empresa.nomus.com.br/empresa/rest/inventarios
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/processarInventarios/:id
+HEADERS
+Content-Type application/json
+Inventário
+POSTCriar inventário
+Cria um novo inventário através dos campos informados no corpo da requisição.
+json
+{
+"idEmpresa": 1,
+"dataHora":"28/10/2023 17:00:00",
+"idUsuario":1,
+"idInventario": 805,
+"idSetorEstoque": 1,
+"itensInventario" : [
+{
+"idProduto":1,
+"quantidadeInventariada":"1.0",
+"idSetorEstoque":444,
+PUTProcessar inventário
+Realiza o processamento do inventário informado no path da requisição.
+Observação: Se seu sistema estiver entre as versões 2884.197 até 2884.220 você deve utilizar GET em vez de PUT.
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id 574
+https://empresa.nomus.com.br/empresa/rest/inventarios/listar
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/inventarios/excluir/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+�Required) id do inventário
+GETListar inventários
+Após uma solicitação bem-sucedida, a response retornará uma lista de objetos inventario.
+OBS� Caso algum campo seja null, esse campo não é retornado.
+DELETEExcluir inventário
+Exclui o inventário informado no path da requisição.
+PATH VARIABLES
+id 570
+https://empresa.nomus.com.br/empresa/rest/impressoras
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+�Required) id do inventário
+Impressoras
+API de impressoras do Nomus.
+GETListar impressoras
+Após uma solicitação bem-sucedida, a response retornará uma lista de objetos impressora.
+Lotes Séries
+API de lotes série do Nomus.
+GETListar lotes séries
+Obtém a lista das lotes série cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Movimentações de estoque
+API de movimentações de estoque do Nomus.
+https://empresa.nomus.com.br/empresa/rest/movimentacoesEstoque
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/notasCreditoCliente
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+GETListar movimentações de estoque
+Obtém as movimentações de estoque.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Notas de crédito de cliente
+API de notas de crédito de cliente do Nomus.
+GETListar notas de crédito de cliente
+Obtém a lista das notas de crédito de cliente cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/notasCreditoCliente/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/notasCreditoFornecedor
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+GETDetalhar nota de crédito de cliente
+Obtém a nota de crédito de cliente referente ao id informado.
+�Required)
+Notas de crédito de fornecedor
+API de notas de crédito de fornecedor do Nomus.
+GETListar notas de crédito de fornecedor
+Obtém a lista das notas de crédito de cliente cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/notasCreditoFornecedor/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/nfes
+HEADERS
+Content-Type application/json
+GETDetalhar nota de crédito de fornecedor
+Obtém a nota de crédito de fornecedor referente ao id informado.
+�Required)
+Notas fiscais eletrônicas
+API de notas fiscais eletrônicas do Nomus.
+GETListar notas fiscais
+Obtém a lista das notas fiscais eletrônicas cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/nfes/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/nfes/cce/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+GETDetalhar nota fiscal
+Obtém a nota fiscal eletrônica referente ao id informado.
+�Required)
+GETObter CCE
+Obtém a CCE da nota fiscal eletrônica referente ao id informado.
+id
+https://empresa.nomus.com.br/empresa/rest/nfes/danfe/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/nfses
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+�Required)
+GETObter DANFE
+Obtém o DANFE da nota fiscal eletrônica referente ao id informado.
+�Required)
+Notas fiscais de serviço eletrônicas
+API de notas fiscais eletrônicas do Nomus.
+GETListar notas fiscais de serviço
+Obtém a lista das notas fiscais de serviço eletrônicas cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/nfses/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/ordens
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+GETDetalhar nota fiscal de serviço
+Obtém a nota fiscal de serviço eletrônica referente ao id informado.
+�Required)
+Ordens
+API de ordens do Nomus.
+GETListar ordens
+Obtém a lista das ordens cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+https://empresa.nomus.com.br/empresa/rest/operacoesRoteiroOrdem
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+https://empresa.nomus.com.br/empresa/rest/pagamentos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+Operação de ordem
+API de operações de ordem do Nomus.
+GETListar operações de ordem
+Obtém a lista das operações de ordem cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Pagamentos
+API de pagamentos do Nomus.
+GETListar pagamentos
+Obtém a lista dos pagamentos cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/pagamentos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+GETDetalhar pagamento
+Obtém o pagamento referente ao id informado.
+�Required)
+Pedidos de venda
+API de pedidos de venda do Nomus.
+Status do item do pedido:
+AGUARDANDO LIBERAÇÃO � 1;
+LIBERADO � 2;
+ATENDIDO PARCIALMENTE � 3;
+ATENDIDO TOTALMENTE � 4;
+ATENDIDO COM_CORTE � 5;
+CANCELADO � 6;
+DEVOLVIDO PARCIALMENTE � 7;
+DEVOLVIDO TOTALMENTE � 8;
+ENVIADO � 9;
+ENTREGUE � 10;
+GETListar pedidos de venda
+https://empresa.nomus.com.br/empresa/rest/pedidos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/pedidos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/pedidos
+Obtém a lista de pedidos de venda cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar pedido de venda
+Obtém o pedido de venda referente ao id informado.
+�Required)
+POSTInserir pedido de venda
+Insere um novo pedido de venda através dos campos informados no corpo da requisição.
+HEADERS
+Content-Type application/json
+Accept application/json
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/pedidos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+json
+{
+"codigoPedido": "PD 0001",
+"dataEmissao": "13/06/2023",
+"idCondicaoPagamento": 28,
+"idEmpresa": 1,
+"idFormaPagamento": 10,
+"idPessoaCliente": 39,
+"idPessoaVendedor": 1002403,
+"idTipoMovimentacao": 127,
+"idTipoPedido": 1,
+"observacoes":"",
+DELETEDeletar pedido de venda
+Deleta o pedido referente ao id informado.
+�Required)
+Pedidos de compra
+https://empresa.nomus.com.br/empresa/rest/pedidoscompra
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+https://empresa.nomus.com.br/empresa/rest/pedidoscompra/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+API de pedidos de compra do Nomus.
+GETListar pedidos de compra
+Obtém a lista de pedidos de compra cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar pedido de compra
+Obtém o pedido de compra referente ao id informado.
+�Required)
+https://empresa.nomus.com.br/empresa/rest/pedidoscompra
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/pedidoscompra/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+POSTInserir pedido de compra
+Insere um novo pedido de compra através dos campos informados no corpo da requisição.
+json
+{
+"codigoPedido": "PC0001",
+"idCondicaoPagamento": 1,
+"idEmpresa": 1,
+"idFormaPagamento": 1,
+"idPessoaFornecedor": 442,
+"idTipoMovimentacao": 120,
+"idTipoPedidoCompra": 3,
+"dataEmissao": "14/03/2023",
+"dataEntregaPadrao": "31/01/2025",
+"itensPedidoCompra":[
+DELETEDeletar pedido de compra
+Deleta o pedido referente ao id informado.
+id
+https://empresa.nomus.com.br/empresa/rest/pessoas
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+query
+https://empresa.nomus.com.br/empresa/rest/pessoas/:id
+HEADERS
+Accept application/json
+Authorization Basic chave-integração-rest
+�Required)
+Pessoas
+API de pessoas do Nomus.
+GETListar pessoas
+Obtém a lista de pessoas cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar pessoa
+Obtém a pessoa referente ao id informado.
+PATH VARIABLES
+id 45648936
+https://empresa.nomus.com.br/empresa/rest/pessoas
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/pessoas/:id
+HEADERS
+�Required)
+POSTInserir pessoa
+Insere uma nova pessoa através dos campos informados no corpo da requisição.
+json
+{
+"ativo": true,
+"bairroDistrito": "centro",
+"cliente": true,
+"concorrente": false,
+"crt": 0,
+"inscricaoEstadual": "",
+"nome": "Teste",
+"nomeRazaoSocial": "Empresa teste xxxx",
+"observacoes": "",
+"tipoContribuinteICMS":0
+PUTEditar pessoa
+Edita a pessoa referente ao id informado, através dos campos enviados no corpo da requisição.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/processos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+https://empresa.nomus.com.br/empresa/rest/processos/:id
+�Required)
+json
+{
+"nome": "Novo nome"
+}
+Processos
+API de processos do Nomus.
+GETListar processos
+Obtém a lista de processos cadastrados.
+GETDetalhar processo
+https://empresa.nomus.com.br/empresa/rest/processos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/processos
+HEADERS
+Content-Type application/json
+Accept application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+Obtém o processo referente ao id informado.
+�Required)
+POSTInserir processo
+Insere um novo processo através dos campos informados no corpo da requisição
+json
+{
+"dataHoraProgramada": "01/10/2025 00:00",
+"nome": "Contato K",
+"reportador": "alex",
+"responsavel": "alex",
+"tipo": "a",
+"prioridade": "Baixa",
+"etapa": "Ganha",
+"equipe": "Equipe Jaguar"
+}
+https://empresa.nomus.com.br/empresa/rest/processos/:id
+HEADERS
+Content-Type application/json
+Accept application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Bodyraw (json)
+PUTEditar processo
+Edita processo através de seu id e campos informados no corpo da requisição.
+json
+{
+"equipe": "Equipe Alpha",
+"dataHoraProgramada": "01/10/2025 00:00",
+"nome": "Contato K",
+"reportador": "alex",
+"responsavel": "alex",
+"tipo": "a",
+"idPrioridade": 6,
+"prioridade": "Baixa",
+"etapa": "Teste"
+}
+Produtos
+API de produtos do Nomus.
+GETListar produtos
+https://empresa.nomus.com.br/empresa/rest/produtos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/produtos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/produtos
+GETListar produtos
+Obtém a a lista dos produtos cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar produto
+Obtém o produto referente ao id informado.
+�Required)
+POSTInserir produto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/produtos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Bodyraw (json)
+Insere um novo produto através dos campos informados no corpo da requisição.
+json
+{
+"nome": "produto",
+"idUnidadeMedida": 1,
+"idTipoProduto": 3,
+"idGrupoProduto": 1,
+"idFamiliaProduto": 1,
+"idsEmpresa": [1,2,3],
+"setoresEstoque":[4,12,17,18]
+}
+PUTEditar produto
+Edita o produto referente ao id informado, através dos campos enviados no corpo da requisição.
+�Required)
+https://empresa.nomus.com.br/empresa/rest/propostas
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/propostas/:id
+HEADERS
+json
+{
+"nome" : "Renomeando produto"
+}
+Propostas
+API de propostas do Nomus.
+GETListar propostas
+Obtém a lista das propostas cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar proposta
+Obtém a proposta referente ao id informado.
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/propostas
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+�Required)
+POSTInserir proposta
+Insere uma nova proposta através dos campos informados no corpo da requisição.
+json
+{
+"proposta": "COD002",
+"idEmpresa": 1,
+"idCliente": 123,
+"idTipoMovimentacao": 1,
+"idContato": 456,
+"dataEmissao": "15/06/2025 14:30:00",
+"dataValidade": "30/06/2025 23:59:59",
+"prazoEntrega": "15",
+"pedidoCompraCliente": "PED12345",
+"observacoes":"Observações gerais da proposta",
+Recebimentos
+API de recebimentos do Nomus.
+https://empresa.nomus.com.br/empresa/rest/recebimentos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/recebimentos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+GETListar recebimentos
+Obtém a lista dos recebimentos cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar recebimento
+Obtém o recebimento referente ao id informado.
+�Required)
+POSTInserir recebimento
+https://empresa.nomus.com.br/empresa/rest/recebimentos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/recursos
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Insere um novo recebimento através dos campos informados no corpo da requisição.
+json
+{
+"idContaReceber": 10,
+"idEmpresa": 1,
+"idClassificacaoFinanceira": 2,
+"idPessoa": 10,
+"idContaBancaria": 1,
+"idFormaPagamento": 1,
+"valorRecebido": "100",
+"dataRecebimento": "20/06/2023"
+}
+Recursos
+API de recursos do Nomus.
+GETListar recursos
+Obtém a lista recursos cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/recursos/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/reporteProducao
+HEADERS
+Content-Type application/json
+GETDetalhar recurso
+Obtém o recurso referente ao id informado.
+�Required)
+Reportes da Produção
+API de reportes de produção do Nomus.
+POSTInserir reporte da produção
+Insere um novo reporte da produção através dos campos informados no corpo da requisição.
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/reporteSubproduto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+json
+{
+"idRecurso": 101,
+"idOrdem": 5001,
+"idOperacaoOrdem": 3002,
+"idFuncionario": 42,
+"idCausa": 7,
+"idTipoMovimentacao": 3,
+"idSetorEstoque": 12,
+"qtde": "15",
+"idUnidadeMedida": 12,
+"idImpressora":1
+Reporte de Subproduto
+API de reportes de subproduto do Nomus.
+POSTInserir reporte de subproduto
+Insere um novo reporte de subproduto através dos campos informados no corpo da requisição.
+PARAMS
+query
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/representantes
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+json
+{
+"idOrdem": 10982,
+"idTipoMovimentacao": 28,
+"idEmpenho": 31453,
+"quantidade": "1",
+"idCausa": 113,
+"idSetorEstoque": 5,
+"idOperacaoOrdem": 13642,
+"idRecurso": 63,
+"idFuncionario": 38,
+"quantidadeEtiquetas":1,
+Representantes
+API de representantes do Nomus.
+GETListar representantes
+Obtém a lista dos representantes cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/representantes/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/representantes/pessoa/:idPessoa
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+idPessoa
+GETDetalhar representante
+Obtém o representante referente ao id informado.
+�Required)
+GETListar representantes de uma pessoa
+Obtém a lista dos representantes de uma pessoa específica.
+Requisições pela produção
+https://empresa.nomus.com.br/empresa/rest/requisicaoProducao/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+qtdePendenteApropriacao 1
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/rotas
+HEADERS
+API de requisições pela produção do Nomus.
+GETConsultar requisições pela produção
+Obtém as requisições pela produção referente ao id da ordem informada.
+Caso não seja passado o parâmetro "qtdePendenteApropriacao", ele irá trazer resultados maiores que zero e, caso
+seja passado, trará iguais ou maiores ao valor informado.
+Rotas de entrega
+API de rotas de entrega no Nomus.
+GETListar rotas de entrega
+Obtém a lista das rotas de entrega cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/rotas/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/roteirosProduto
+HEADERS
+GETDetalhar rota de entrega
+Obtém a rota de entrega referente ao id informado.
+�Required)
+Roteiros de produto
+API de roteiros de produto do Nomus.
+GETListar roteiros de produto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/roteirosProduto/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/saldosEstoqueProduto/:idProduto
+GETDetalhar roteiro de produto
+Obtém o roteiro de produto referente ao id informado.
+�Required)
+Saldos de estoque de produto
+API de saldos de estoque de produtos do Nomus.
+GETListar estoque de produto
+Obtém a lista de estoque do produto em todas as empresas e setores que o mesmo estiver positivo. Sendo
+obrigatório informar o idProduto como demonstrado no exemplo.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+data
+PATH VARIABLES
+idProduto
+https://empresa.nomus.com.br/empresa/rest/saldosEstoqueProdutoLoteSerie/:idProduto/:idSetorEstoque
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+obrigatório informar o idProduto como demonstrado no exemplo.
+Além disso, se informado uma data, será retornado o saldo do dia no horário das 23�59�00.
+Saldos de estoque de produto por lote/série
+API de saldos de estoque de produtos por lote/série do Nomus.
+GETListar estoque de produto por lote/série
+Obtém a lista de estoque do produto no setor de estoque informado. Sendo obrigatório informar o idProduto e o
+setorEstoque como demonstrado no exemplo.
+Além disso, se informado uma data, será retornado o saldo do dia no horário das 23�59�00.
+PATH VARIABLES
+idProduto
+idSetorEstoque
+https://empresa.nomus.com.br/empresa/rest/setorEstoque
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+https://empresa.nomus.com.br/empresa/rest/setorEstoque
+HEADERS
+Content-Type application/json
+�Required)
+Setores de Estoque
+API de setores de estoque do Nomus.
+GETListar setores de estoque
+Obtém a lista de setores de estoque.
+POSTInserir setor de estoque
+Insere um setor de estoque novo.
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/setorEstoque/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+PATH VARIABLES
+json
+{
+"ativo": true,
+"codigo": "16199",
+"consideraComoSaldoDisponivel": true,
+"consideraSaldoIntegracaoMercos": false,
+"consideraSaldoNoEcommerce": false,
+"controlePoderTerceiros": 1,
+"desconsideraSaldoEscrituracaoBlocoK200": false,
+"estoqueEmProcesso": false,
+"idEmpresa": 80,
+"nome":"entrada"
+PUTEditar um setor de estoque
+Edita o setor de estoque referente ao id informado.
+id
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/solicitacoes
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/solicitacoes/:id
+json
+{
+"nome": "EDITADA"
+}
+Solicitações
+API de solicitações do Nomus.
+GETListar solicitações
+Obtém a lista das solitações cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar solicitação
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/solicitacoes
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+pagina
+Bodyraw (json)
+Obtém a solicitação referente ao id informado.
+�Required)
+POSTInserir solicitação
+Insere uma solicitação nova.
+json
+{
+"solicitacao": "SC TESTE 001",
+"idEmpresa": 1,
+"idCliente": 1001467,
+"idContato": 2692,
+"idRepresentante": 3076,
+"idVendedor": 1,
+"dataHoraAbertura":"02/01/2025 00:00"
+https://empresa.nomus.com.br/empresa/rest/solicitacoesCompras
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+"dataHoraAbertura":"02/01/2025 00:00",
+"dataLimiteApresentacaoProposta": "05/01/2025 00:00",
+"observacoes": "Inserção de teste via POST",
+"modalidadeTransporte":"0",
+Solicitações de compra
+API de solicitações de compra do Nomus.
+GETListar solicitações de compra
+Obtém a lista de solicitações de compra.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Orientações sobre os campos de retorno:
+• Origem:
+◦ 1 � Geração de ordem;
+◦ 2 � Inclusão livre;
+◦ 3 � MRP.
+• Status:
+◦ 1 � Encerrada;
+◦ 2 � Atendida parcialmente;
+◦ 3 � Confirmada;
+◦ 4 � Cancelada;
+◦ 5 � Planejada;
+◦ 6 � Liberada.
+https://empresa.nomus.com.br/empresa/rest/tabelasPreco
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/tabelasPreco/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Tabelas de preço
+GETListar tabelas de preço
+Obtém a lista das tabelas de preço cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar tabela de preço
+Obtém a tabela de preço referente ao id informado.
+�Required)
+https://empresa.nomus.com.br/empresa/rest/tiposMovimentacao
+Tipos de movimentação
+API de tipos de movimentação do Nomus.
+GETListar tipos de movimentação
+Obtém a lista de tipos de movimentação.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+Orientações sobre os campos de retorno:
+• Função PCP�
+◦ 1 � Nenhuma;
+◦ 2 � Requisição pela produção;
+◦ 3 � Devolução de requisição pela produção;
+◦ 4 � Reporte de produção;
+◦ 5 � Devolução de reporte da produção;
+◦ 6 � Apropriação pela produção;
+◦ 7 � Devolução de apropriação pela produção;
+◦ 8 � Reporte de co-produto;
+◦ 9 � Devolução de reporte de co-produto;
+◦ 10 � Transferência pela produção;
+◦ 11 � Devolução de transferência pela produção;
+◦ 12 � Reporte de Subproduto;
+◦ 13 � Devolução de reporte de Subproduto;
+◦ 14 � Saída por reclassificação de produto;
+◦ 15 � Entrada por reclassificação de produto;
+◦ 16 � Separação de materiais para produção;
+◦ 17 � Devolução de separação de materiais para produção;
+◦ 18 � Transferência de materiais para produção;
+◦ 19 � Devolução de Transferência de materiais para produção.
+• Natureza:
+◦ 1 � Venda;
+◦ 2 � Saída;
+◦ 3 � Compra;
+◦ 4 � Entrada;
+◦ 5 � Devolução;
+◦ 6 � Transferência;
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/tiposMovimentacao/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+PATH VARIABLES
+◦ 7 � Venda de serviço;
+◦ 8 � Compra de serviço.
+• Natureza de transferência:
+◦ 1 � Venda;
+◦ 2 � Saída;
+◦ 3 � Compra;
+◦ 4 � Entrada.
+PUTEditar tipo de movimentação
+Edita o tipo de movimentação referente ao id informado.
+id
+Bodyraw (json)
+https://empresa.nomus.com.br/empresa/rest/tiposProduto
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+json
+{
+"idsSetoresEntradaHabilitados": "5,6",
+"idsSetoresSaidaHabilitados": "2,4"
+}
+Tipos de produto
+API de tipos de produto do Nomus.
+GETListar tipos de produto
+Obtém a lista dos tipos de produtos cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar tipo de produto
+https://empresa.nomus.com.br/empresa/rest/tiposProduto/:id
+HEADERS
+Accept application/json
+PATH VARIABLES
+id 45648936
+https://empresa.nomus.com.br/empresa/rest/unidadesMedida
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+Obtém o tipo de produto referente ao id informado.
+�Required)
+Unidades de medida
+API de unidades de medida do Nomus.
+GETListar unidades de medida
+Obtém a lista das unidades de medidas cadastradas.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar unidade de medida
+https://empresa.nomus.com.br/empresa/rest/unidadesMedida/:id
+HEADERS
+Accept application/json
+PATH VARIABLES
+id 45648936
+serverUrl https://empresa.nomus.com.br/empresa
+https://empresa.nomus.com.br/empresa/rest/usuarios
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+https://empresa.nomus.com.br/empresa/rest/usuarios/:id
+GETDetalhar unidade de medida
+Obtém a unidade de medida referente ao id informado.
+�Required)
+Usuários
+API de usuários do Nomus.
+GETListar usuários
+Obtém a lista dos usuários cadastradas.
+GETDetalhar usuário
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/usuarios
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+Bodyraw (json)
+Obtém o usuários referente ao id informado.
+POSTInserir usuário
+Insere um novo usuário através dos campos informados no corpo da requisição.
+json
+{
+"ativo": true,
+"email": "nomus@nomus.com.br",
+"nome": "Usuario Nomus",
+"login": "usuarioNomus",
+"grupoUsuarios": "Grupo 2",
+"restringirEmpresas": true,
+"idsEmpresas":[
+https://empresa.nomus.com.br/empresa/rest/usuarios/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+Bodyraw (json)
+"idsEmpresas":[
+1,
+10,
+12
+PUTEditar usuário
+Edita o usuário referente ao id informado.
+json
+{
+"nome": "Usuario Nomus editado",
+"idsEmpresas": [
+2,
+10
+]
+}
+Vendedores
+API de representantes do Nomus.
+GETListar vendedores
+https://empresa.nomus.com.br/empresa/rest/vendedores
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PARAMS
+query
+pagina
+https://empresa.nomus.com.br/empresa/rest/vendedores/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+https://empresa.nomus.com.br/empresa/rest/vendedores/pessoa/:idPessoa
+Obtém a lista dos vendedores cadastrados.
+É possível filtrar através do parâmetro "query" como demonstrado no exemplo.
+GETDetalhar vendedor
+Obtém o vendedor referente ao id informado.
+�Required)
+GETListar vendedores de uma pessoa
+Obtém a lista dos vendedores de uma pessoa específica.
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+idPessoa
+https://empresa.nomus.com.br/empresa/rest/contasBancarias/:id
+HEADERS
+Content-Type application/json
+Authorization Basic chave-integração-rest
+PATH VARIABLES
+id
+GETDetalhar conta a pagar Copy
+Obtém a conta bancária referente ao id informado.
+�Required)

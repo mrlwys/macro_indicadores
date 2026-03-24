@@ -185,6 +185,39 @@ const SECTOR_COLORS = {
   diretoria: { main: COLORS.yellow, light: COLORS.yellowLight, dim: COLORS.yellowDim, label: "Diretoria" },
 };
 
+const COVERAGE_STYLES = {
+  real: {
+    label: "Dados reais",
+    color: COLORS.greenLight,
+    border: `${COLORS.green}45`,
+    background: `${COLORS.green}14`,
+  },
+  mixed: {
+    label: "Dados mistos",
+    color: COLORS.blueLight,
+    border: `${COLORS.blue}45`,
+    background: `${COLORS.blue}14`,
+  },
+  partial: {
+    label: "Cobertura parcial",
+    color: COLORS.yellowLight,
+    border: `${COLORS.yellow}45`,
+    background: `${COLORS.yellow}14`,
+  },
+  mock: {
+    label: "Mock",
+    color: COLORS.textMuted,
+    border: `${COLORS.textDim}55`,
+    background: `${COLORS.textDim}14`,
+  },
+  unknown: {
+    label: "Cobertura não informada",
+    color: COLORS.textMuted,
+    border: `${COLORS.textDim}55`,
+    background: `${COLORS.textDim}14`,
+  },
+};
+
 function getStatus(value, target, inverted = false) {
   if (value === null || value === undefined) return "neutral";
   const ratio = inverted ? target / value : value / target;
@@ -218,6 +251,85 @@ function formatBRL(v) {
 
 function formatPct(v) { return v !== null && v !== undefined ? `${v.toFixed(1)}%` : "—"; }
 function formatNum(v) { return v !== null && v !== undefined ? v.toLocaleString("pt-BR") : "—"; }
+function formatDateTime(value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+}
+
+function resolveCoverageVisual(status) {
+  return COVERAGE_STYLES[status] ?? COVERAGE_STYLES.unknown;
+}
+
+function getCoverageBlock(meta, block) {
+  return meta?.block_coverage?.[block] ?? null;
+}
+
+function summarizeDashboardCoverage(dataProvided, payload) {
+  const meta = payload?._meta;
+
+  if (!meta) {
+    if (!dataProvided) {
+      return {
+        status: "mock",
+        label: "Mock local",
+        description: "Exibindo a base local simulada enquanto nenhum snapshot compatível é carregado.",
+        lastSuccessfulRealSyncAt: null,
+      };
+    }
+
+    return {
+      status: "unknown",
+      label: "Cobertura não informada",
+      description: "Este snapshot é compatível, mas não traz metadados de cobertura. Trate os blocos com cautela.",
+      lastSuccessfulRealSyncAt: null,
+    };
+  }
+
+  const coverages = Object.values(meta.block_coverage ?? {});
+  const realBlocks = coverages.filter((block) => block.status === "real").length;
+  const partialBlocks = coverages.filter((block) => block.status === "partial").length;
+  const mockBlocks = coverages.filter((block) => block.status === "mock").length;
+  const failedEndpoints = meta.source_coverage?.nomus?.failed_endpoints?.length ?? 0;
+
+  if (failedEndpoints > 0) {
+    return {
+      status: "partial",
+      label: "Cobertura parcial",
+      description: `${failedEndpoints} endpoint(s) não contribuíram neste snapshot. Parte dos blocos pode estar desatualizada.`,
+      lastSuccessfulRealSyncAt: meta.last_successful_real_sync_at ?? null,
+    };
+  }
+
+  if (meta.data_source_status === "real") {
+    return {
+      status: "real",
+      label: "Dados reais",
+      description: `Snapshot montado com cobertura real nos blocos integrados${realBlocks ? ` (${realBlocks} bloco(s) totalmente reais)` : ""}.`,
+      lastSuccessfulRealSyncAt: meta.last_successful_real_sync_at ?? null,
+    };
+  }
+
+  if (meta.data_source_status === "mock") {
+    return {
+      status: "mock",
+      label: "Dados simulados",
+      description: "Snapshot montado a partir de base simulada. Use apenas para validação visual.",
+      lastSuccessfulRealSyncAt: meta.last_successful_real_sync_at ?? null,
+    };
+  }
+
+  return {
+    status: "mixed",
+    label: "Dados mistos",
+    description: `${partialBlocks} bloco(s) parcial(is) e ${mockBlocks} em mock. O dashboard está visualmente íntegro, mas a cobertura ainda não é completa.`,
+    lastSuccessfulRealSyncAt: meta.last_successful_real_sync_at ?? null,
+  };
+}
 
 // Micro bar chart
 function MiniBar({ data, color, height = 48 }) {
@@ -296,17 +408,48 @@ function KPICard({ title, value, meta, format = "num", inverted = false, color, 
   );
 }
 
-function SectionHeader({ color, label, icon }) {
+function CoverageBadge({ status, label, title }) {
+  const visual = resolveCoverageVisual(status);
+
+  return (
+    <span
+      title={title}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "4px 8px",
+        borderRadius: 999,
+        border: `1px solid ${visual.border}`,
+        background: visual.background,
+        color: visual.color,
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: 0.3,
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <span style={{ width: 6, height: 6, borderRadius: "50%", background: visual.color, boxShadow: `0 0 10px ${visual.color}55` }} />
+      {label ?? visual.label}
+    </span>
+  );
+}
+
+function SectionHeader({ color, label, icon, coverage }) {
   return (
     <div style={{
-      display: "flex", alignItems: "center", gap: 10, marginBottom: 16, marginTop: 28,
+      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 16, marginTop: 28,
       paddingBottom: 10, borderBottom: `2px solid ${color}40`,
     }}>
-      <div style={{
-        width: 32, height: 32, borderRadius: 8, background: `${color}20`, border: `1px solid ${color}40`,
-        display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16,
-      }}>{icon}</div>
-      <span style={{ fontSize: 16, fontWeight: 700, color: COLORS.white, letterSpacing: 0.3 }}>{label}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{
+          width: 32, height: 32, borderRadius: 8, background: `${color}20`, border: `1px solid ${color}40`,
+          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16,
+        }}>{icon}</div>
+        <span style={{ fontSize: 16, fontWeight: 700, color: COLORS.white, letterSpacing: 0.3 }}>{label}</span>
+      </div>
+      {coverage ? <CoverageBadge status={coverage.status} /> : null}
     </div>
   );
 }
@@ -317,6 +460,15 @@ function SectionHeader({ color, label, icon }) {
 export default function DashboardGrupoMusso({ data, showHeader = true }) {
   const [activeTab, setActiveTab] = useState("geral");
   const d = data || SAMPLE_DATA;
+  const dashboardSummary = summarizeDashboardCoverage(Boolean(data), d);
+  const meta = d?._meta;
+  const alertasCoverage = getCoverageBlock(meta, "alertas");
+  const acoesCoverage = getCoverageBlock(meta, "acoes_pendentes");
+  const comercialCoverage = getCoverageBlock(meta, "comercial");
+  const orcamentacaoCoverage = getCoverageBlock(meta, "orcamentacao");
+  const engenhariaCoverage = getCoverageBlock(meta, "engenharia");
+  const producaoCoverage = getCoverageBlock(meta, "producao");
+  const financeiroCoverage = getCoverageBlock(meta, "financeiro");
 
   const tabs = [
     { id: "geral", label: "Visão Geral", icon: "◉" },
@@ -415,6 +567,32 @@ export default function DashboardGrupoMusso({ data, showHeader = true }) {
 
       {/* CONTENT */}
       <div style={{ padding: "20px 24px", maxWidth: 1400, margin: "0 auto" }} className="fade-in" key={activeTab}>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 12,
+          marginBottom: 20,
+          padding: "12px 14px",
+          background: COLORS.card,
+          border: `1px solid ${resolveCoverageVisual(dashboardSummary.status).border}`,
+          borderRadius: 10,
+        }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ fontSize: 11, color: COLORS.textDim, textTransform: "uppercase", letterSpacing: 0.5 }}>Origem dos dados</div>
+              <CoverageBadge status={dashboardSummary.status} label={dashboardSummary.label} />
+            </div>
+            <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5 }}>{dashboardSummary.description}</div>
+          </div>
+          <div style={{ textAlign: "right", minWidth: 170 }}>
+            <div style={{ fontSize: 10, color: COLORS.textDim, textTransform: "uppercase" }}>Última sync real</div>
+            <div style={{ fontSize: 12, color: COLORS.text, fontWeight: 600 }}>
+              {formatDateTime(dashboardSummary.lastSuccessfulRealSyncAt)}
+            </div>
+          </div>
+        </div>
 
         {activeTab === "geral" && (
           <>
@@ -494,21 +672,57 @@ export default function DashboardGrupoMusso({ data, showHeader = true }) {
             {/* ALERTS + ACTIONS */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 14 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.white, marginBottom: 12 }}>⚠ Alertas Ativos</div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 8 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.white }}>⚠ Alertas Ativos</div>
+                  {alertasCoverage ? <CoverageBadge status={alertasCoverage.status} /> : null}
+                </div>
+                {alertasCoverage?.status && alertasCoverage.status !== "real" ? (
+                  <div style={{ fontSize: 10, color: COLORS.textDim, lineHeight: 1.5, marginBottom: 10 }}>
+                    Leitura parcial: estes alertas usam parte dos dados reais já integrados, mas ainda dependem de metas e blocos não totalmente conectados.
+                  </div>
+                ) : null}
                 {d.alertas.map((a, i) => (
                   <div key={i} style={{
                     padding: "8px 10px", marginBottom: 6, borderRadius: 6, fontSize: 11, lineHeight: 1.4,
-                    background: a.tipo === "danger" ? `${COLORS.red}10` : a.tipo === "warning" ? `${COLORS.yellow}10` : `${COLORS.green}10`,
-                    borderLeft: `3px solid ${a.tipo === "danger" ? COLORS.red : a.tipo === "warning" ? COLORS.yellow : COLORS.green}`,
+                    background:
+                      a.tipo === "danger"
+                        ? `${COLORS.red}10`
+                        : a.tipo === "warning"
+                          ? `${COLORS.yellow}10`
+                          : a.tipo === "neutral"
+                            ? `${COLORS.textDim}12`
+                            : `${COLORS.green}10`,
+                    borderLeft: `3px solid ${
+                      a.tipo === "danger"
+                        ? COLORS.red
+                        : a.tipo === "warning"
+                          ? COLORS.yellow
+                          : a.tipo === "neutral"
+                            ? COLORS.textDim
+                            : COLORS.green
+                    }`,
                     color: COLORS.textMuted,
                   }}>
-                    <span style={{ color: a.tipo === "danger" ? COLORS.redLight : a.tipo === "warning" ? COLORS.yellowLight : COLORS.greenLight, fontWeight: 600 }}>{a.setor}: </span>
+                    <span style={{
+                      color:
+                        a.tipo === "danger"
+                          ? COLORS.redLight
+                          : a.tipo === "warning"
+                            ? COLORS.yellowLight
+                            : a.tipo === "neutral"
+                              ? COLORS.text
+                              : COLORS.greenLight,
+                      fontWeight: 600,
+                    }}>{a.setor}: </span>
                     {a.msg}
                   </div>
                 ))}
               </div>
               <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 14 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.white, marginBottom: 12 }}>📋 Ações do Roadmap</div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.white }}>📋 Ações do Roadmap</div>
+                  {acoesCoverage ? <CoverageBadge status={acoesCoverage.status} /> : null}
+                </div>
                 {d.acoes_pendentes.map((a, i) => (
                   <div key={i} style={{
                     display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -536,7 +750,7 @@ export default function DashboardGrupoMusso({ data, showHeader = true }) {
 
         {activeTab === "comercial" && (
           <>
-            <SectionHeader color={COLORS.blue} label="Painel Comercial" icon="◈" />
+            <SectionHeader color={COLORS.blue} label="Painel Comercial" icon="◈" coverage={comercialCoverage} />
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10, marginBottom: 20 }}>
               <KPICard title="Oportunidades/Mês" value={d.comercial.oportunidades_mes} meta={d.comercial.oportunidades_meta} />
               <KPICard title="Orçamentos Emitidos" value={d.comercial.orcamentos_emitidos} meta={d.comercial.orcamentos_meta} />
@@ -578,7 +792,7 @@ export default function DashboardGrupoMusso({ data, showHeader = true }) {
 
         {activeTab === "orcamento" && (
           <>
-            <SectionHeader color={COLORS.purple} label="Painel de Orçamentação" icon="◇" />
+            <SectionHeader color={COLORS.purple} label="Painel de Orçamentação" icon="◇" coverage={orcamentacaoCoverage} />
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 20 }}>
               <KPICard title="Emitidos/Mês" value={d.orcamentacao.emitidos_mes} meta={d.orcamentacao.meta_emitidos} />
               <KPICard title="Tempo Resposta (h)" value={d.orcamentacao.tempo_medio_resposta_hrs} meta={d.orcamentacao.meta_tempo} inverted />
@@ -608,7 +822,7 @@ export default function DashboardGrupoMusso({ data, showHeader = true }) {
 
         {activeTab === "engenharia" && (
           <>
-            <SectionHeader color={COLORS.cyan} label="Painel de Engenharia" icon="⬡" />
+            <SectionHeader color={COLORS.cyan} label="Painel de Engenharia" icon="⬡" coverage={engenhariaCoverage} />
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 20 }}>
               <KPICard title="Checklist Compliance" value={d.engenharia.checklist_compliance} meta={d.engenharia.meta_checklist} format="pct" />
               <KPICard title="Tempo Médio Projeto" value={d.engenharia.tempo_medio_projeto_dias} meta={15} subtitle="dias (referência)" />
@@ -622,7 +836,7 @@ export default function DashboardGrupoMusso({ data, showHeader = true }) {
 
         {activeTab === "producao" && (
           <>
-            <SectionHeader color={COLORS.orange} label="Painel de Produção" icon="⬢" />
+            <SectionHeader color={COLORS.orange} label="Painel de Produção" icon="⬢" coverage={producaoCoverage} />
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 20 }}>
               <KPICard title="Entregas no Prazo" value={d.producao.entregas_no_prazo_pct} meta={d.producao.meta_entregas} format="pct" />
               <KPICard title="Projetos Simultâneos" value={d.producao.projetos_simultaneos} meta={10} subtitle="capacidade estimada" />
@@ -637,7 +851,7 @@ export default function DashboardGrupoMusso({ data, showHeader = true }) {
 
         {activeTab === "financeiro" && (
           <>
-            <SectionHeader color={COLORS.green} label="Painel Financeiro" icon="◆" />
+            <SectionHeader color={COLORS.green} label="Painel Financeiro" icon="◆" coverage={financeiroCoverage} />
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10, marginBottom: 20 }}>
               <KPICard title="Faturamento YTD" value={faturamentoYTD} meta={d.financeiro.meta_anual} format="brl" />
               <KPICard title="Faturamento Médio/Mês" value={faturamentoMedio} meta={833000} format="brl" />

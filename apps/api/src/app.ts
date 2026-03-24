@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { ZodError } from "zod";
 import { env } from "./config/env.js";
 import { authRouter } from "./routes/auth.js";
+import { configRouter } from "./routes/config.js";
 import { dashboardRouter } from "./routes/dashboard.js";
 import { healthRouter } from "./routes/health.js";
 import { syncRouter } from "./routes/sync.js";
@@ -28,6 +29,7 @@ export function createApp() {
   app.use("/api/health", healthRouter);
   app.use("/api/auth", authRouter);
   app.use("/api/users", usersRouter);
+  app.use("/api/config", configRouter);
   app.use("/api/dashboard", dashboardRouter);
   app.use("/api/sync", syncRouter);
 

@@ -1,9 +1,11 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { env } from "../config/env.js";
 
-let client: SupabaseClient | null = null;
+type AnySupabaseClient = SupabaseClient<any, string, string, any, any>;
 
-export function getSupabaseAdminClient(): SupabaseClient | null {
+let client: AnySupabaseClient | null = null;
+
+export function getSupabaseAdminClient(): AnySupabaseClient | null {
   if (!env.SUPABASE_URL) {
     return null;
   }

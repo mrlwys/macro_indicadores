@@ -4,14 +4,18 @@ import LoginScreen from "./components/LoginScreen.jsx";
 import SettingsUsersPanel from "./components/SettingsUsersPanel.jsx";
 import {
   clearStoredToken,
+  createConfigEntry,
   createUser,
+  deleteConfigEntry,
   deleteUser,
+  fetchConfigEntries,
   fetchLatestDashboard,
   fetchMe,
   fetchUsers,
   getStoredToken,
   login,
   setStoredToken,
+  updateConfigEntry,
   updateUser,
 } from "./lib/api.js";
 
@@ -34,8 +38,14 @@ export default function App() {
   const isAdmin = currentUser?.accessLevel === "admin";
 
   async function loadDashboard() {
-    const snapshot = await fetchLatestDashboard();
-    setDashboardData(snapshot?.payload ?? null);
+    try {
+      const snapshot = await fetchLatestDashboard();
+      setDashboardData(snapshot?.payload ?? null);
+      return true;
+    } catch {
+      setDashboardData(null);
+      return false;
+    }
   }
 
   useEffect(() => {
@@ -215,9 +225,14 @@ export default function App() {
             const result = await fetchUsers();
             return result.users ?? [];
           }}
+          onFetchConfigEntries={async () => fetchConfigEntries()}
           onCreateUser={async (payload) => createUser(payload)}
           onUpdateUser={async (userId, payload) => updateUser(userId, payload)}
           onDeleteUser={async (userId) => deleteUser(userId)}
+          onCreateConfigEntry={async (payload) => createConfigEntry(payload)}
+          onUpdateConfigEntry={async (entryId, payload) => updateConfigEntry(entryId, payload)}
+          onDeleteConfigEntry={async (entryId) => deleteConfigEntry(entryId)}
+          onConfigChanged={loadDashboard}
         />
       ) : (
         <DashboardGrupoMusso data={dashboardData} showHeader={false} />

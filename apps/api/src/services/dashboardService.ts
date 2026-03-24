@@ -1,14 +1,20 @@
 import { getSupabaseAdminClient } from "../lib/supabase.js";
+import { dashboardDataSchema, dashboardSnapshotSchema } from "../lib/dashboardSchema.js";
 import type { DashboardData, DashboardSnapshot } from "../lib/types.js";
 import { sampleDashboardData } from "../data/sampleDashboard.js";
+import { applyDashboardConfigEntries } from "./dashboardConfigService.js";
 
-export async function getLatestDashboard(): Promise<DashboardSnapshot> {
-  const client = getSupabaseAdminClient();
-  const fallback: DashboardSnapshot = {
-    source: "sample",
+function buildFallbackSnapshot(source: string): DashboardSnapshot {
+  return {
+    source,
     reference_date: new Date().toISOString().slice(0, 10),
     payload: sampleDashboardData,
   };
+}
+
+export async function getLatestDashboard(): Promise<DashboardSnapshot> {
+  const client = getSupabaseAdminClient();
+  const fallback = buildFallbackSnapshot("sample");
 
   if (!client) {
     return fallback;
@@ -25,8 +31,27 @@ export async function getLatestDashboard(): Promise<DashboardSnapshot> {
     return fallback;
   }
 
-  const latest = data[0] as DashboardSnapshot;
-  return latest;
+  try {
+    const parsed = dashboardSnapshotSchema.parse(data[0]);
+    return {
+      ...parsed,
+      payload: await applyDashboardConfigEntries({
+        payload: parsed.payload,
+        referenceDate: parsed.reference_date,
+      }),
+    };
+  } catch (parseError) {
+    // eslint-disable-next-line no-console
+    console.warn("Latest dashboard snapshot is invalid, falling back to sample.", parseError);
+    const fallbackInvalid = buildFallbackSnapshot("sample_invalid_snapshot");
+    return {
+      ...fallbackInvalid,
+      payload: await applyDashboardConfigEntries({
+        payload: fallbackInvalid.payload,
+        referenceDate: fallbackInvalid.reference_date,
+      }),
+    };
+  }
 }
 
 export async function createDashboardSnapshot(input: {
@@ -39,12 +64,18 @@ export async function createDashboardSnapshot(input: {
     return null;
   }
 
+  const validatedPayload = dashboardDataSchema.parse(input.payload);
+  const payloadWithConfig = await applyDashboardConfigEntries({
+    payload: validatedPayload,
+    referenceDate: input.referenceDate,
+  });
+
   const { data, error } = await client
     .from("dashboard_snapshots")
     .insert({
       source: input.source,
       reference_date: input.referenceDate,
-      payload: input.payload,
+      payload: payloadWithConfig,
     })
     .select("id, source, reference_date, payload, created_at")
     .single();
@@ -53,5 +84,5 @@ export async function createDashboardSnapshot(input: {
     throw error;
   }
 
-  return data as DashboardSnapshot;
+  return dashboardSnapshotSchema.parse(data);
 }
